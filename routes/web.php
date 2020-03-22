@@ -20,3 +20,35 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::prefix('inventarios')->group(function(){
+
+
+	Route::get('articulos','ArticuloController@index')
+		->name('articulos.index')
+		->middleware('auth');
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
