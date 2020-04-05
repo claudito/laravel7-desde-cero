@@ -19,48 +19,189 @@ class ArticuloController extends Controller
 		}
 
 
-
 		return view('inventarios.articulos.index');
 
 
+	}
 
-		// $codigo       =  "001";
-		// $descripcion  =  "Arroz";
-		// $unidad       =  "Kg";
 
-		// Articulo::create([
+	function  agregar(Request $request){
 
-		// 	'codigo'	  =>$codigo,
-		// 	'descripcion' =>$descripcion,
-		// 	'unidad' 	  =>$unidad
 
-		// ]);	
+		try {
 
-		// Articulo::where('codigo',$codigo)
-		// ->update([
 
-		// 	'descripcion' => $descripcion,
-		// 	'unidad'	  => $unidad	
+			$articulo = Articulo::where('codigo',$request->codigo)
+			->count();
 
-		// ]);
 
-		// return Articulo::all();
+			if($articulo>0){
 
-		// return Articulo::find(1);//id
 
-		// return Articulo::where('codigo','001')
-		// ->get();
+			return  array(
 
-			// Articulo::find(1)
-			// 	->delete();
+				'title' => 'Código Duplicado',
+				'text'  => 'Intente de Nuevo',
+				'icon'  => 'warning',
+				'timer' =>  3000
 
-		// Articulo::where('codigo','002')
-		// ->delete();
+			);	
+
+
+			}else{
+
+
+			Articulo::create([
+
+				'codigo' 		=> $request->codigo,
+				'descripcion'	=> $request->descripcion,
+				'unidad'		=> $request->unidad
+
+			]);
+
+
+			return  array(
+
+			'title' => 'Buen Trabajo',
+			'text'  => 'Registro Agregado',
+			'icon'  => 'success',
+			'timer' =>  3000
+
+		);	
+
+
+
+
+			}
+
+
+
+		
+
+			
+		} catch (\Illuminate\Database\QueryException $e) {
+
+
+		return  array(
+
+			'title' => 'Error',
+			'text'  =>   (env('APP_DEBUG')==true) ? $e->getCode() : $e->getMessage() ,
+			'icon'  => 'error',
+			'timer' => 10000
+
+		);	
+
+
+		}
+
+
+	}
+
+
+	function  actualizar(Request $request){
+
+
+		try {
+			
+
+			Articulo::where('id',$request->id)
+			->update([
+
+				'descripcion' => $request->descripcion,
+				'unidad'	  => $request->unidad
+
+			]);
+
+			return  array(
+
+				'title' => 'Buen Trabajo',
+				'text'  => 'Registro Actualizado',
+				'icon'  => 'success',
+				'timer' =>  3000
+
+			);	
+
+
+
+		} catch (Exception $e) {
+
+
+			return  array(
+
+			'title' => 'Error',
+			'text'  =>   (env('APP_DEBUG')==true) ? $e->getCode() : $e->getMessage() ,
+			'icon'  => 'error',
+			'timer' => 10000
+
+		);	
+
+
+
+			
+		}
+
+
+
+	}
+
+	function  eliminar(Request $request){
+
+
+		try {
+			
+
+		Articulo::where('id',$request->id)
+		->delete();
+
+	
+		return  array(
+
+			'title' => 'Buen Trabajo',
+			'text'  => 'Registro Eliminado',
+			'icon'  => 'success',
+			'timer' =>  3000
+
+		);	
+
+
+		} catch (\Illuminate\Database\QueryException $e) {
+
+
+			return  array(
+
+			'title' => 'Error',
+			'text'  =>   (env('APP_DEBUG')==true) ? $e->getCode() : $e->getMessage() ,
+			'icon'  => 'error',
+			'timer' => 10000
+
+		);	
+
+
+
+			
+		}
+		
+
 
 
 
 
 	}
+
+	function  consultar(Request $request){
+
+
+	$articulo = Articulo::where('id',$request->id)->first();
+
+
+	return $articulo;
+
+	
+
+
+	}
+
+
 
 
 }
